@@ -20,10 +20,10 @@ function cURL($url, $options = [])
     if(!$cURL_handle = curl_init())
       throw new Exception('cURL failed to init.');
 
-    foreach (array(CURLOPT_URL => $url,
-                   CURLOPT_CONNECTTIMEOUT => 10,
-                   CURLOPT_RETURNTRANSFER => true,
-                   CURLOPT_USERAGENT => 'vitor@furlin.me')
+    foreach ([CURLOPT_URL => $url,
+              CURLOPT_CONNECTTIMEOUT => 10,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_USERAGENT => 'vitor@furlin.me']
     as $key => $value)
       if(!array_key_exists($key, $options))
         $options[$key] = $value;
@@ -41,6 +41,6 @@ function cURL($url, $options = [])
   } finally
   {
     curl_close($cURL_handle);
-    return $content ?? '';
   }
+  return $content ?? '';
 }
