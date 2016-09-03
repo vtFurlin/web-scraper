@@ -69,12 +69,13 @@ function getXpath($content)
 /**
  * Evaluates the given XPath expression
  * @param DOMXPath $xpath object to invoke the query method
+ * @param string $query XPath expression to evaluate
  * @param DOMNode [$context_node] specified for doing relative XPath queries
  * @return DOMNodeList
  */
-function query($xpath, $context_node = [])
+function query($xpath, $query, $context_node = false)
 {
-  if(!empty($context_node))
+  if($context_node)
     $node_list = $xpath->query($query, $context_node);
   else
     $node_list = $xpath->query($query);
