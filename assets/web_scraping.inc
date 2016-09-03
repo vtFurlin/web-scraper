@@ -44,3 +44,23 @@ function cURL($url, $options = [])
   }
   return $content ?? '';
 }
+
+/**
+ * gets the DOMXPath from the html content
+ * @param string $content HTML content to be used
+ * @return DOMXPath
+ */
+function getXpath($content)
+{
+  $dom_document = new DOMDocument();
+  $dom_document->preserveWhiteSpace = false;
+
+  libxml_use_internal_errors(true);
+
+  if(!$dom_document->loadHTML($content))
+    throw new Exception('DOMDocument::loadHTML failed.');
+
+  libxml_clear_errors();
+
+  return new DOMXpath($dom_document);
+}
