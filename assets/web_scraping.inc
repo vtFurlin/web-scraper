@@ -21,7 +21,8 @@ function cURL($url, $options = [])
       throw new Exception('cURL failed to init.');
 
     foreach ([CURLOPT_URL => $url,
-              CURLOPT_CONNECTTIMEOUT => 10,
+              CURLOPT_CONNECTTIMEOUT => 5,
+              CURLOPT_TIMEOUT => 10,
               CURLOPT_RETURNTRANSFER => true,
               CURLOPT_USERAGENT => 'vitor@furlin.me']
     as $key => $value)
@@ -46,8 +47,8 @@ function cURL($url, $options = [])
 }
 
 /**
- * gets the DOMXPath from the html content
- * @param string $content HTML content to be used
+ * Creates a new DOMXPath from the HTML content
+ * @param string $content The HTML string to be used.
  * @return DOMXPath
  */
 function getXpath($content)
@@ -63,4 +64,23 @@ function getXpath($content)
   libxml_clear_errors();
 
   return new DOMXpath($dom_document);
+}
+
+/**
+ * Evaluates the given XPath expression
+ * @param DOMXPath $xpath object to invoke the query method
+ * @param DOMNode [$context_node] specified for doing relative XPath queries
+ * @return DOMNodeList
+ */
+function query($xpath, $context_node = [])
+{
+  if(!empty($context_node))
+    $node_list = $xpath->query($query, $context_node);
+  else
+    $node_list = $xpath->query($query);
+
+  if($node_list === false)
+    throw new Exception('DOMXPath::query failed to evaluate query: '.$query);
+
+  return $node_list;
 }
