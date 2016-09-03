@@ -15,22 +15,32 @@
  */
 function cURL($url, $options = [])
 {
-  if(!$curl_handle = curl_init())
-    throw new Exception('cURL failed to init.');
+  try
+  {
+    if(!$cURL_handle = curl_init())
+      throw new Exception('cURL failed to init.');
 
-  foreach (array(CURLOPT_URL => $url,
-                 CURLOPT_CONNECTTIMEOUT => 10,
-                 CURLOPT_RETURNTRANSFER => true,
-                 CURLOPT_USERAGENT => 'vitor@furlin.me')
-  as $key => $value)
-    if(!array_key_exists($key, $options))
-      $options[$key] = $value;
+    foreach (array(CURLOPT_URL => $url,
+                   CURLOPT_CONNECTTIMEOUT => 10,
+                   CURLOPT_RETURNTRANSFER => true,
+                   CURLOPT_USERAGENT => 'vitor@furlin.me')
+    as $key => $value)
+      if(!array_key_exists($key, $options))
+        $options[$key] = $value;
 
-  if(!curl_setopt_array($curl_handle, $options))
-    throw new Exception('cURL failed to set all options with curl_setopt_array.');
+    if(!curl_setopt_array($cURL_handle, $options))
+      throw new Exception('cURL failed to set all options with curl_setopt_array.');
 
-  if(!$content = curl_exec($curl_handle))
-    throw new Exception('cURL failed to execute.');
+    if(!$content = curl_exec($cURL_handle))
+      throw new Exception('cURL failed to execute.');
 
-  return $content ?? '';
+  } catch (Exception $e)
+  {
+    //rethrow the Exception
+    throw new Exception($e);
+  } finally
+  {
+    curl_close($cURL_handle);
+    return $content ?? '';
+  }
 }
